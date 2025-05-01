@@ -1,0 +1,41 @@
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> possible_parenthesis;
+        std::string current = "";
+        int open =0;
+        int closed = 0;
+        std::queue<std::tuple<string, int, int>> q;
+        std::tuple<string,int,int> temp(current, open, closed);
+        q.emplace(temp);
+        while(q.empty() != true) {
+            temp = q.front();
+            q.pop();
+            if(std::get<0>(temp).size() == 2 * n) { 
+                possible_parenthesis.push_back(std::get<0>(temp));
+            }
+            std::tuple<string, int,int> temp2; 
+            if(std::get<1>(temp) < n) { 
+                temp2= std::make_tuple(std::get<0>(temp) + "(", std::get<1>(temp) + 1, std::get<2>(temp));
+                q.emplace(temp2);
+            }
+            if(std::get<2>(temp) < std::get<1>(temp)) { 
+                temp2 = std::make_tuple(std::get<0>(temp) + ")", std::get<1>(temp), std::get<2>(temp) + 1);
+                q.emplace(temp2);
+            }
+        }
+        return possible_parenthesis;
+        
+    }
+};
+
+The trick  is to use backtracking to keep track of the formed string. you can use recursion or a queue/stack with bfs.
+
+I used a queue. When the size of the string being tracked is equal to double the number n, the string is complete and can be added to the list of valid strings.
+
+If it's not, first add open parenthesis until you reach the limit, n.
+Upon reaching it, then add closing parenthesis. 
+
+for both steps add, the updated string and variables back into the queue and repeat until the queue is empty. 
+
+The approach is similiar to bfs.
