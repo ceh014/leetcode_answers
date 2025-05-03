@@ -1,0 +1,56 @@
+class Solution {
+public:
+    int minDominoRotations(vector<int>& tops, vector<int>& bottoms) {
+        int top_rots = 0;
+        int bottom_rots = 0;
+        int min_top_rots = 0;
+        int min_bottom_rots = 0;
+        for(int i = 0; i < tops.size(); i++) {
+            if(tops[0] != tops[i] && tops[0] != bottoms[i]) { 
+                top_rots = std::numeric_limits<int>::max();
+                bottom_rots = std::numeric_limits<int>::max();
+                break;
+            }
+            if(tops[0] != tops[i]) { 
+                top_rots++;
+            }
+            if(tops[0] != bottoms[i]) { 
+                bottom_rots++;
+            }
+        }
+
+        min_top_rots = (top_rots > bottom_rots) ? bottom_rots : top_rots;
+        top_rots = 0;
+        bottom_rots = 0;
+        
+        for(int i = 0; i < tops.size(); i++) {
+            if(bottoms[0] != tops[i] && bottoms[0] != bottoms[i]) {
+                top_rots = std::numeric_limits<int>::max();
+                bottom_rots = std::numeric_limits<int>::max();
+                break;
+            }
+            if(bottoms[0] != tops[i]) { 
+                top_rots++;
+            }
+            if(bottoms[0] != bottoms[i]) { 
+                bottom_rots++;
+            }
+        }
+        min_bottom_rots = (top_rots > bottom_rots) ? bottom_rots : top_rots;
+        if(min_bottom_rots == std::numeric_limits<int>::max() && min_top_rots == std::numeric_limits<int>::max()) { 
+            return -1;
+        }
+        
+        return (min_top_rots > min_bottom_rots) ? min_bottom_rots : min_top_rots;
+        }
+        
+};
+
+The trick is to check if either tops[0] or bottoms[0] can be in every number either in the top_rot
+or bottom of the array. To check, check the value of tops[0] against every number in the bottoms and tops array
+if the top is not equal increae the number of top rotations, if the bottom is not equal then increase the number of bottom rotations
+If both are not equal, then the number cannot be achieved, return a large value.
+ 
+Do this same check on the bottom array and 
+
+Once finished return the smallest number of rotations or a -1 if you got a large value at any point.
