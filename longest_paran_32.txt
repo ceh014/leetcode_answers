@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        vector<int> indices;
+        indices.push_back(-1);
+        int max_length = 0;
+        for(int i = 0; i < s.size();i++) { 
+            if(s[i] == '(') { 
+                indices.push_back(i);
+            }
+            else { 
+                indices.pop_back();
+                if(indices.empty() == true) {
+                    indices.push_back(i);
+                }
+                else {
+                    max_length = max_length > i - indices[indices.size()-1] ? max_length : i - indices[indices.size()-1];
+                }
+
+            }
+        }
+        return max_length;
+    }
+};
+
+No trick simply use a stack to keep track of valid parenthesis
