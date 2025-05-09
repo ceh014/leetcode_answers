@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int minTimeToReach(vector<vector<int>>& moveTime) {
+        int n  = moveTime.size();
+        int m  = moveTime[0].size();
+        std::vector<vector<int>> visited(n, vector<int>(m,INT_MAX));
+        priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>> toVisit;
+        toVisit.push({0,0,0});
+
+        vector<vector<int>> directions{{0,1}, {1,0}, {0,-1}, {-1,0}};
+        while(!toVisit.empty())  {
+            vector<int>temp = toVisit.top();
+            toVisit.pop();
+            int currentTime = temp[0];
+            int currentRow = temp[1];
+            int currentColumn = temp[2];
+            if(currentRow == n -1 && currentColumn ==m-1) { 
+                return currentTime;
+            }
+            if(currentTime >= visited[currentRow][currentColumn]) { 
+                continue;
+            }
+            visited[currentRow][currentColumn] = currentTime;
+            
+            for(vector<int> direction : directions) { 
+                int newRow = currentRow + direction[0];
+                int newColumn = currentColumn + direction[1];
+                if(newRow >= 0 && newRow < n && newColumn >= 0 && newColumn < m && visited[newRow][newColumn] == INT_MAX) {
+                    int moveCost = (currentRow + currentColumn) % 2 + 1;
+                    int newTime =  max(moveTime[newRow][newColumn], currentTime);
+                    newTime = newTime + moveCost;
+                    toVisit.push({newTime, newRow, newColumn});
+                }
+
+            }
+        }
+        return -1;
+        
+    }
+};
+
+The trick is to use djisktra to keep track of the current shortest path. Since path movement flips, add a parity check on the current column and row %2. 
